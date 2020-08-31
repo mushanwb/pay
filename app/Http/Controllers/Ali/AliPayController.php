@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Pay\Pay;
 use Illuminate\Support\Facades\Log;
 
-class AliPay extends Controller implements Pay {
+class AliPayController extends Controller implements Pay {
 
     protected $aliPay;
 

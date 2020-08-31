@@ -4,17 +4,16 @@
 namespace App\Http\Controllers\Pay;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Wechat\WechatPay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class PayCenter extends Controller {
+class PayCenterController extends Controller {
 
     private static $payment = ['WechatPay','ALi'];
 
     private static $payObjectNameSpace = [
-        'WechatPay' => 'App\Http\Controllers\Wechat\WechatPay',
-        'ALi' => 'App\Http\Controllers\Ali\AliPay',
+        'WechatPay' => 'App\Http\Controllers\Wechat\WechatPayController',
+        'ALi' => 'App\Http\Controllers\Ali\AliPayController',
     ];
 
     private $payObjectConfig;
