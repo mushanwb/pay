@@ -35,7 +35,7 @@ class PayCenterController extends Controller {
     public function payCenter(Request $request) {
         Log::info("开始支付流程");
 
-        $payInfo = $request->post('payInfo');
+        $payInfo = $request->all();
 
         if (!$this->payNeedParamVerification($payInfo)) {
             return $this->_apiExit(40001);
