@@ -44,16 +44,7 @@ class AliPayController extends Controller implements Pay {
 
         Log::info("订单： " . $payInfo['order_num'] . "  支付宝支付返回结果： " . json_encode($response));
 
-        $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
-
-        $resultCode = $response->$responseNode->code;
-
-        if(!empty($resultCode) && $resultCode == 10000){
-            return $response;
-        } else {
-            Log::error("订单： " . $payInfo['order_num'] . "  支付宝支付失败");
-            return false;
-        }
+        return $response;
 
     }
 
