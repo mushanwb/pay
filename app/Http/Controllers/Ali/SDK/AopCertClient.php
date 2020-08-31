@@ -434,7 +434,7 @@ class AopCertClient
                 throw new Exception("加密类型只支持AES");
             }
             // 执行加密
-            $enCryptContent = encrypt($apiParams['biz_content'], $this->encryptKey);
+            $enCryptContent = alipayEncrypt($apiParams['biz_content'], $this->encryptKey);
             $apiParams['biz_content'] = $enCryptContent;
         }
         $totalParams = array_merge($apiParams, $sysParams);
@@ -563,7 +563,7 @@ class AopCertClient
                 throw new Exception("加密类型只支持AES");
             }
             // 执行加密
-            $enCryptContent = encrypt($apiParams['biz_content'], $this->encryptKey);
+            $enCryptContent = alipayEncrypt($apiParams['biz_content'], $this->encryptKey);
             $apiParams['biz_content'] = $enCryptContent;
         }
 
@@ -1142,7 +1142,7 @@ class AopCertClient
         $parsetItem = $this->parserEncryptJSONSignSource($request, $responseContent);
         $bodyIndexContent = substr($responseContent, 0, $parsetItem->startIndex);
         $bodyEndContent = substr($responseContent, $parsetItem->endIndex, strlen($responseContent) + 1 - $parsetItem->endIndex);
-        $bizContent = decrypt($parsetItem->encryptContent, $this->encryptKey);
+        $bizContent = alipayDecrypt($parsetItem->encryptContent, $this->encryptKey);
         return $bodyIndexContent . $bizContent . $bodyEndContent;
     }
 
@@ -1188,7 +1188,7 @@ class AopCertClient
         $parsetItem = $this->parserEncryptXMLSignSource($request, $responseContent);
         $bodyIndexContent = substr($responseContent, 0, $parsetItem->startIndex);
         $bodyEndContent = substr($responseContent, $parsetItem->endIndex, strlen($responseContent) + 1 - $parsetItem->endIndex);
-        $bizContent = decrypt($parsetItem->encryptContent, $this->encryptKey);
+        $bizContent = alipayDecrypt($parsetItem->encryptContent, $this->encryptKey);
         return $bodyIndexContent . $bizContent . $bodyEndContent;
 
     }
