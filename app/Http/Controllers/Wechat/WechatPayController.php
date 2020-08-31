@@ -8,7 +8,7 @@ use App\Http\Controllers\Pay\Pay;
 use EasyWeChat\Factory;
 use Illuminate\Support\Facades\Log;
 
-class WechatPay extends Controller implements Pay {
+class WechatPayController extends Controller implements Pay {
 
     protected $wechatPay;
 
