@@ -43,7 +43,7 @@ class PayCenterController extends Controller {
 
         $payObject = $this->getPayObject($payInfo['payment']);
 
-        $result = $payObject->pay();
+        $result = $payObject->pay($payInfo);
 
         if ($result) {
             return $this->_apiExit(200,$result);
