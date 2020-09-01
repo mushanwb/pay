@@ -45,8 +45,12 @@ class PayCenterController extends Controller {
 
         $result = $payObject->pay($payInfo);
 
+        $data['order_num'] = $payInfo['order_num'];
+        $data['payment'] = $payInfo['payment'];
+        $data['pay_param'] = $result;
+
         if ($result) {
-            return $this->_apiExit(200,$result);
+            return $this->_apiExit(200,$data);
         } else {
             return $this->_apiExit(50001);
         }
