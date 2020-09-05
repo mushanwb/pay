@@ -106,7 +106,7 @@ return [
      */
      'payment' => [
          'default' => [
-             'sandbox'            => env('WECHAT_PAYMENT_SANDBOX', false),
+             'sandbox'            => env('WECHAT_PAYMENT_SANDBOX', false),      // true 为开启沙箱模式
              'app_id'             => env('WECHAT_PAYMENT_APPID', ''),
              'mch_id'             => env('WECHAT_PAYMENT_MCH_ID', 'your-mch-id'),
              'key'                => env('WECHAT_PAYMENT_KEY', 'key-for-signature'),
