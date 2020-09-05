@@ -11,23 +11,6 @@ class PayCenterController extends Controller {
 
     private static $payment = ['WechatPay','ALi'];
 
-    private static $payObjectNameSpace = [
-        'WechatPay' => 'App\Http\Controllers\Wechat\WechatPayController',
-        'ALi' => 'App\Http\Controllers\Ali\AliPayController',
-    ];
-
-    private $payObjectConfig;
-
-    /**
-     * PayCenter constructor.
-     */
-    public function __construct() {
-        $this->payObjectConfig = [
-            'WechatPay' => config('wechat.payment.default'),
-            'ALi' => config('ali.payment.default'),
-        ];
-    }
-
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -41,12 +24,20 @@ class PayCenterController extends Controller {
             return $this->_apiExit(40001);
         }
 
-        $payObject = $this->getPayObject($payInfo['payment']);
+        $payment = $payInfo['payment'];
+
+        $payFactory = new PayFactory($payment);
+
+        $payObject = $payFactory->getPayObject();
+
+        if ($payObject == null) {
+            return $this->_apiExit(40002);
+        }
 
         $result = $payObject->pay($payInfo);
 
         $data['order_num'] = $payInfo['order_num'];
-        $data['payment'] = $payInfo['payment'];
+        $data['payment'] = $payment;
         $data['pay_param'] = $result;
 
         if ($result) {
@@ -71,21 +62,6 @@ class PayCenterController extends Controller {
         }
 
         return true;
-    }
-
-    /**
-     * @param $payment
-     * @return object
-     */
-    protected function getPayObject($payment) {
-
-        $payObjectNameSpace = self::$payObjectNameSpace[$payment];
-
-        $config = $this->payObjectConfig[$payment];
-
-        Log::info("获取支付对象： " . $payObjectNameSpace . "   以及支付配置：" . json_encode($config));
-
-        return new $payObjectNameSpace($config);
     }
 
 }
