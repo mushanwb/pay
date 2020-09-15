@@ -71,7 +71,6 @@ class PayCenterController extends Controller {
         return true;
     }
 
-
     /**
      * 微信支付需要传的参数
      * @param $payInfoKey
@@ -89,5 +88,4 @@ class PayCenterController extends Controller {
 
         return true;
     }
-
 }
