@@ -16,16 +16,20 @@
 
 Ⅰ、通过调用 payCenterController 控制器的 payCenter 进行支付。传入支付必须参数。
 
-> 目前设定支付必传参数：   
+```php
+//  restful api
+
+[post]    /api/pay_center
+```
+
+> 支付统一必传参数：   
 > payment : 支付方式    
 > order_num : 订单号   
 > total_price : 订单总价格(单位：元)  
 > goods_title : 商品标题 (body)   
 > detail : 商品详情 (微信的 detail 参数，支付宝的 subject 参数) 
 
-> 注意：微信支付还必须传 openid，该参数没有在 payCenter 方法中进行验证
-
-> 补充：微信的支付方式默认为 JSAPI，如需要其他，可以当作参数传入，然后进行相应的封装
+> 注意：微信支付还必须传 openid 和 trade_type , trade_type 值为 JSAPI 或 APP 两种选择
 
 Ⅱ、两个支付方式分别实现了 Pay 这个接口，因此如需要添加其他支付方式，也必须实现该接口。
 
