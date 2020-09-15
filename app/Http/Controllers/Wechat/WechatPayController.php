@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 class WechatPayController extends Controller implements Pay {
 
     protected $wechatPay;
+    public static $wechat_trade_type = ['JSAPI', 'APP'];
 
     /**
      * WechatPay constructor.
@@ -41,12 +42,22 @@ class WechatPayController extends Controller implements Pay {
         Log::info("订单： " . $payInfo['order_num'] . "  微信支付返回结果： " . json_encode($payResult));
 
         if ($payResult['return_code'] == 'SUCCESS' && $payResult['result_code'] == 'SUCCESS') {
-            return $this->wechatPay->jssdk->bridgeConfig($payResult['prepay_id'], false);
+            return $this->wechatPayResult($payInfo, $payResult['prepay_id']);
         } else {
             Log::error("订单： " . $payInfo['order_num'] . "  微信支付失败");
             return false;
         }
+    }
 
+    protected function wechatPayResult($payInfo, $prepayId) {
+        switch ($payInfo['trade_type']) {
+            case "JSAPI" :
+                return $this->wechatPay->jssdk->bridgeConfig($prepayId, false);
+            case "APP" :
+                return $this->wechatPay->jssdk->appConfig($prepayId);
+            default:
+                return null;
+        }
     }
 
     protected function payParamProcess($payInfo) {
@@ -57,7 +68,7 @@ class WechatPayController extends Controller implements Pay {
             'detail' => $payInfo['detail'],
             'out_trade_no' => $payInfo['order_num'],
             'total_fee' => bcmul($payInfo['total_price'], 100),
-            'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
+            'trade_type' => $payInfo['trade_type'],
             'openid' => $payInfo['openid'],
         ];
 
