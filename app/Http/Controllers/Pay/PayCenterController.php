@@ -4,16 +4,20 @@
 namespace App\Http\Controllers\Pay;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Wechat\WechatPayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class PayCenterController extends Controller {
 
-    private static $payment = ['WechatPay','ALi'];
+    private static $payment = ['WechatPay','ALiPay'];
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function payCenter(Request $request) {
         Log::info("开始支付流程");
@@ -58,6 +62,28 @@ class PayCenterController extends Controller {
         $payInfoKey = array_keys($payInfo);
 
         if (array_diff($payNeedParam, $payInfoKey) || !in_array($payInfo['payment'], self::$payment)) {
+            return false;
+        }
+
+        if ($payInfo['payment'] == "WechatPay" && !$this->wechatPayNeedParam($payInfoKey, $payInfo)) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * 微信支付需要传的参数
+     * @param $payInfoKey
+     * @param $payInfo
+     * @return bool
+     */
+    protected function wechatPayNeedParam($payInfoKey, $payInfo) {
+        if (!in_array("openid", $payInfoKey) || !in_array("trade_type", $payInfoKey)) {
+            return false;
+        };
+
+        if (!in_array($payInfo['trade_type'], WechatPayController::$wechat_trade_type)) {
             return false;
         }
 
