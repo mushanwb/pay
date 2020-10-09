@@ -60,6 +60,13 @@ class AliPayController extends Controller implements Pay {
             'out_trade_no' => $payInfo['order_num']
         ];
 
+        if ($payInfo['trade_type'] == "app_hua_bei") {
+            $orderNeedParam['extend_params'] = array(
+                'hb_fq_num' => $payInfo['period_num'],
+                'hb_fq_seller_percent' => ($payInfo['hb_fq_seller_percent'] == 100) ? 100 : 0
+            );
+        }
+        Log::info("支付参数: " . json_encode($orderNeedParam));
         return $orderNeedParam;
     }
 }

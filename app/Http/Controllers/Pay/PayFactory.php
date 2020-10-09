@@ -23,7 +23,7 @@ class PayFactory extends Controller {
 
         $this->payObjectConfig = [
             'WechatPay' => config('wechat.payment.default'),
-            'ALiPay' => config('ali.payment.default'),
+            'AliPay' => config('ali.payment.default'),
         ];
 
     }
@@ -33,11 +33,14 @@ class PayFactory extends Controller {
         switch ($this->payment) {
             case "WechatPay":
                 return new WechatPayController($payObjectConfig);
-            case "ALiPay":
+            case "AliPay":
                 return new AliPayController($payObjectConfig);
             default:
                 return null;
         }
     }
 
+
 }
+
+
