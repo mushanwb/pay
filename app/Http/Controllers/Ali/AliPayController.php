@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 class AliPayController extends Controller implements Pay {
 
     protected $aliPay;
+    protected $config;
 
     /**
      * AliPay constructor.
@@ -20,6 +21,7 @@ class AliPayController extends Controller implements Pay {
 
         // TODO: Implement pay() method.
         $this->aliPay = new AopClient($config);
+        $this->config = $config;
     }
 
     /**
@@ -36,7 +38,7 @@ class AliPayController extends Controller implements Pay {
 
         $bizcontent = json_encode($orderNeedParam);
 
-        $request->setNotifyUrl(env('NOTIFY_URL'));
+        $request->setNotifyUrl($this->config['notify_url']);
 
         $request->setBizContent($bizcontent);
 

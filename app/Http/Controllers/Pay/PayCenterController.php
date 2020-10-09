@@ -32,8 +32,9 @@ class PayCenterController extends Controller {
         }
 
         $payment = $payInfo['payment'];
+        $tradeType = $payInfo['trade_type'];
 
-        $payFactory = new PayFactory($payment);
+        $payFactory = new PayFactory($payment, $tradeType);
 
         $payObject = $payFactory->getPayObject();
 
