@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Log;
 
 class PayCenterController extends Controller {
 
-    private static $payment = ['WechatPay','ALiPay'];
+    private static $payment = ['WechatPay','AliPay'];
+    private static $wechatTradeType = ['app', 'web', 'mini_program'];
+    private static $aliTradeType = ['app', 'app_hua_bei'];
+
 
     /**
      * @param Request $request
@@ -57,7 +60,7 @@ class PayCenterController extends Controller {
      * @return bool
      */
     protected function payNeedParamVerification($payInfo) {
-        $payNeedParam = ['goods_title', 'detail', 'total_price', 'order_num', 'payment'];
+        $payNeedParam = ['goods_title', 'detail', 'total_price', 'order_num', 'payment', 'trade_type'];
 
         $payInfoKey = array_keys($payInfo);
 
@@ -68,6 +71,11 @@ class PayCenterController extends Controller {
         if ($payInfo['payment'] == "WechatPay" && !$this->wechatPayNeedParam($payInfoKey, $payInfo)) {
             return false;
         }
+
+        if ($payInfo['payment'] == "AliPay" && !$this->aliPayNeedParam($payInfo)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -78,11 +86,31 @@ class PayCenterController extends Controller {
      * @return bool
      */
     protected function wechatPayNeedParam($payInfoKey, $payInfo) {
-        if (!in_array("openid", $payInfoKey) || !in_array("trade_type", $payInfoKey)) {
+        if (!in_array("openid", $payInfoKey)) {
             return false;
         };
 
-        if (!in_array($payInfo['trade_type'], WechatPayController::$wechat_trade_type)) {
+        if (!in_array($payInfo['trade_type'], self::$wechatTradeType)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 支付宝支付需要参数
+     * @param $payInfoKey
+     * @param $payInfo
+     * @return bool
+     */
+    protected function aliPayNeedParam($payInfoKey, $payInfo) {
+        if (!in_array($payInfo['trade_type'], self::$aliTradeType)) {
+            return false;
+        }
+
+        if ($payInfo['trade_type'] == "app_hua_bei" && (
+            !in_array("period_num", $payInfoKey) ||
+            !in_array("hb_fq_seller_percent", $payInfoKey))) {
             return false;
         }
 

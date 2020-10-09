@@ -11,7 +11,11 @@ use Illuminate\Support\Facades\Log;
 class WechatPayController extends Controller implements Pay {
 
     protected $wechatPay;
-    public static $wechat_trade_type = ['JSAPI', 'APP'];
+    public static $wechatTradeType = [
+        'app' => 'APP',
+        'web' => 'JSAPI',
+        'mini_program' => 'JSAPI'
+    ];
 
     /**
      * WechatPay constructor.
@@ -50,7 +54,7 @@ class WechatPayController extends Controller implements Pay {
     }
 
     protected function wechatPayResult($payInfo, $prepayId) {
-        switch ($payInfo['trade_type']) {
+        switch (self::$wechatTradeType[$payInfo['trade_type']]) {
             case "JSAPI" :
                 return $this->wechatPay->jssdk->bridgeConfig($prepayId, false);
             case "APP" :
@@ -68,10 +72,11 @@ class WechatPayController extends Controller implements Pay {
             'detail' => $payInfo['detail'],
             'out_trade_no' => $payInfo['order_num'],
             'total_fee' => bcmul($payInfo['total_price'], 100),
-            'trade_type' => $payInfo['trade_type'],
+            'trade_type' => self::$wechatTradeType[$payInfo['trade_type']],
             'openid' => $payInfo['openid'],
         ];
 
+        Log::info("支付参数: " . json_encode($orderNeedParam));
         return $orderNeedParam;
     }
 
