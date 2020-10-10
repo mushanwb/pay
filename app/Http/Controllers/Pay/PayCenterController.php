@@ -73,7 +73,7 @@ class PayCenterController extends Controller {
             return false;
         }
 
-        if ($payInfo['payment'] == "AliPay" && !$this->aliPayNeedParam($payInfo)) {
+        if ($payInfo['payment'] == "AliPay" && !$this->aliPayNeedParam($payInfoKey,$payInfo)) {
             return false;
         }
 
